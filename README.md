@@ -11,9 +11,11 @@ System został zaprojektowany na platformę web. Może być uruchamiany w dowoln
 4. **Utworzenie WZ** - operator ma możliwosć rejestracji WZ-ki nie przypisanej do żadnego wydania, ręcznie wypełniając tresć dokumentu. System przechowuje takie WZ-ki i umożliwia ich wydruk
 5. **Drukowanie raportów** - system pozwala na drukowanie raportów zgodnie z załączoną listą
 6. **Logowanie do systemu** - system przechowuje własną listę operatorów (użytkowników) umożliwiając własną autoryzację lub poprzez protokół LDAP
+
 ###4. Dokumenty
 1. Wydanie z magazynu
 2. Przyjęcie na magazyn
+
 ###5. Specyfikacja danych
 System korzysta z bazy danych zdefiniowanej w pliku konfiguracyjnym
 1. Produkty
