@@ -1,11 +1,7 @@
-package code 
-package snippet 
-
-import scala.xml.{NodeSeq, Text}
+package net.pgc.snippet 
 import net.liftweb.util._
 import net.liftweb.common._
-import java.util.Date
-import Helpers._
+import net.liftweb.util.Helpers._
 
 class HelloWorld {
   def howdy = "#time *" #> Helpers.now.toString()
