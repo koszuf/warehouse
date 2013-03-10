@@ -2,7 +2,7 @@ name := "Warehouse system"
 
 version := "0.0.1"
 
-organization := "pl.kkdev"
+organization := "net.pgc"
 
 scalaVersion := "2.9.1"
 
@@ -17,7 +17,7 @@ unmanagedResourceDirectories in Test <+= (baseDirectory) { _ / "src/main/webapp"
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC1"
+  val liftVersion = "2.5-RC2"
   Seq(
     "net.liftweb"       %% "lift-webkit"        % liftVersion        % "compile",
     "net.liftweb"       %% "lift-mapper"        % liftVersion        % "compile",
