@@ -52,5 +52,16 @@ class Boot {
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))
+
+    //Add H2Console
+    if (Props.devMode || Props.testMode) {
+      LiftRules.liftRequest.append({
+        case r if (r.path.partPath match {
+          case "console" :: _ => true
+          case _ => false
+        }
+          ) => false
+      })
+    }
   }
 }
