@@ -3,7 +3,8 @@ import net.liftweb.util._
 import net.liftweb.common._
 import net.liftweb.util.Helpers._
 
-class HelloWorld {
+class HelloWorld extends Logger {
+  info("Test")
   def howdy = "#time *" #> Helpers.now.toString()
 }
 
