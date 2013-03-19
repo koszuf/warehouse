@@ -11,6 +11,7 @@ import sitemap._
 import Loc._
 import mapper._
 
+import net.pgc.model.Produkt
 import net.liftmodules.JQueryModule
 
 /**
@@ -23,11 +24,27 @@ class Boot {
     // where to search snippet
     LiftRules.addToPackages("net.pgc")
 
+    //inicjalizacja DB
+    if (!DB.jndiJdbcConnAvailable_?) {
+      val vendor =
+        new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
+          Props.get("db.url") openOr
+            "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
+          Props.get("db.user"), Props.get("db.password"))
+
+      LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
+
+      DB.defineConnectionManager(DefaultConnectionIdentifier, vendor)
+    }
+
+    //Utworzenie struktury bazy
+    Schemifier.schemify(true, Schemifier.infoF _, Produkt)
+
     // Build SiteMap
     val entries = List(
       Menu.i("Home") / "index", // the simple way to declare a menu
       Menu(Loc("Static", Link(List("static"), true, "/static/index"),
-        "Static Content")))
+        "Static Content"))):::Produkt.menus
     LiftRules.setSiteMap(SiteMap(entries: _*))
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
@@ -63,5 +80,8 @@ class Boot {
           ) => false
       })
     }
+
+    //Make a transaction span the whole HTTP request
+    S.addAround(DB.buildLoanWrapper)
   }
 }
