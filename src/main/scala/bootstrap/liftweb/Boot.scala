@@ -11,7 +11,7 @@ import sitemap._
 import Loc._
 import mapper._
 
-import net.pgc.model.Produkt
+import net.pgc.model._
 import net.liftmodules.JQueryModule
 
 /**
@@ -38,13 +38,13 @@ class Boot {
     }
 
     //Utworzenie struktury bazy
-    Schemifier.schemify(true, Schemifier.infoF _, Produkt)
+    Schemifier.schemify(true, Schemifier.infoF _, Product,Shipment, ShipmentLine)
 
     // Build SiteMap
     val entries = List(
       Menu.i("Home") / "index", // the simple way to declare a menu
       Menu(Loc("Static", Link(List("static"), true, "/static/index"),
-        "Static Content"))):::Produkt.menus
+        "Static Content"))):::Product.menus
     LiftRules.setSiteMap(SiteMap(entries: _*))
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
