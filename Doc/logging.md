@@ -22,7 +22,7 @@ Kolejne wpisy dotyczą tego, że logi na poziomie 'info' i wyżej są zapisywane
 
 ###Logowanie w systemie###
 
-Aby "włączyć" logowanie w obrębie klasy należy rozszerzyć ją o trait `Logger`. Następnie w obrębie klasy posługujemy się poleceniami info, debug, etc do logowania na odpowiednim poziomie. Przykład:
+Aby "włączyć" logowanie w obrębie klasy należy rozszerzyć ją o trait `Logger` (net.liftweb.common.Logger). Następnie w obrębie klasy posługujemy się poleceniami info, debug, etc do logowania na odpowiednim poziomie. Przykład:
 
     class HelloWorld extends Logger {
     	info ("Początek klasy HelloWorld")
