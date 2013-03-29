@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <title>Wydania</title>
@@ -8,16 +8,24 @@
 <div id="main" class="lift:surround?with=default;at=content">
     <h2>Wydania</h2>
 
-    <p>
+    <div class="lift:shipments">
+        <h3>Wydanie dla firmy <span class="company"></span>:</h3>
 
-    <div class="lift:wydania.render">
-        <ul id="row">    <span id="nr"></span>
+        <table class="lines_table">
+            <tr>
+                <th>Produkt</th>
+                <th>Cena</th>
+                <th>Ilość</th>
+            </tr>
+            <tr class="lines">
+                <td class="product"></td>
+                <td class="price"></td>
+                <td class="qty"></td>
+            </tr>
 
-            <li>Ilość: <span id="ile"></span></li>
+        </table>
 
-        </ul>
     </div>
-    </p>
 </div>
 </body>
 </html>
