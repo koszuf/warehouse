@@ -14,18 +14,19 @@ import net.liftweb.mapper.{By, ByList, Ascending, OrderBy}
 class Shipments extends Logger {
 
 
-  val shipmnentsDB = Shipment.findAll(OrderBy(Shipment.id, Ascending))
-  val linesDB = ShipmentLine.findAll(ByList(ShipmentLine.shipment, shipmnentsDB.map(_.id.is)))
-  val shipments = for (h <- shipmnentsDB) yield (h, ShipmentLine.findAll(By(ShipmentLine.shipment, (h.id.is))))
+  val shipmentsDB = Shipment.findAll(OrderBy(Shipment.id, Ascending))
+  val linesDB = ShipmentLine.findAll(ByList(ShipmentLine.shipment, shipmentsDB.map(_.id.is)))
+  val shipments = for (h <- shipmentsDB) yield (h, ShipmentLine.findAll(By(ShipmentLine.shipment, (h.id.is))))
   //TODO:Nie szukamy w bazie ale w lines
   val products = Product.findAll(ByList(Product.id, linesDB.map(_.product.is)))
+  val companys = Company.findAll(ByList(Company.id, shipmentsDB.map(_.company.is)))
 
 
   def render = {
     "* *" #> shipments.map {
       case (shipment, existingLines) =>
-        ".company *" #> shipment.company.toString & ".when *" #> shipment.when.toString & ".who *" #> shipment.who.toString &
-        ".whom *" #> shipment.whom.toString &
+        ".company *" #> companys(shipment.company.is.toInt -1 ).name & ".when *" #> shipment.when.toString &
+          ".who *" #> shipment.who.toString & ".whom *" #> shipment.whom.toString &
           (existingLines match {
             case List() => ".lines_table *" #> ""
             case lines => ".lines *" #> lines.map {

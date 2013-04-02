@@ -38,14 +38,14 @@ class Boot {
     }
 
     //Utworzenie struktury bazy
-    Schemifier.schemify(true, Schemifier.infoF _, Product,Shipment, ShipmentLine)
+    Schemifier.schemify(true, Schemifier.infoF _, Product,Shipment, ShipmentLine, Company)
 
     // Build SiteMap
     val entries = List(
       Menu.i("Home") / "index", // the simple way to declare a menu
       Menu.i("Wydania") / "wydania",
       Menu(Loc("Static", Link(List("static"), true, "/static/index"),
-        "Static Content"))):::Product.menus
+        "Static Content"))):::Product.menus ::: Company.menus
     LiftRules.setSiteMap(SiteMap(entries: _*))
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.

@@ -20,9 +20,8 @@ class Shipment extends LongKeyedMapper[Shipment] with IdPK with Logger {
    */
 
   object when extends MappedDateTime(this)
+  object company extends MappedLongForeignKey(this,Company)
 
-  //TODO: Zmienić na foreign relationship Firma
-  object company extends MappedString(this, 100)
 
   object whom extends MappedString(this, 100)
 
