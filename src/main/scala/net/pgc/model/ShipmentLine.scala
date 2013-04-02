@@ -27,6 +27,8 @@ class ShipmentLine extends LongKeyedMapper[ShipmentLine] with IdPK with Logger {
 
   object quantity extends MappedInt(this)
 
+  def value = price.get * quantity.get
+
 }
 
 object ShipmentLine extends ShipmentLine with LongKeyedMetaMapper[ShipmentLine]

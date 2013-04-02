@@ -15,18 +15,24 @@ class Shipments extends Logger {
 
 
   val shipmnentsDB = Shipment.findAll(OrderBy(Shipment.id, Ascending))
-  val lines = ShipmentLine.findAll(ByList(ShipmentLine.shipment, shipmnentsDB.map(_.id.is)))
+  val linesDB = ShipmentLine.findAll(ByList(ShipmentLine.shipment, shipmnentsDB.map(_.id.is)))
   val shipments = for (h <- shipmnentsDB) yield (h, ShipmentLine.findAll(By(ShipmentLine.shipment, (h.id.is))))
   //TODO:Nie szukamy w bazie ale w lines
-  val products = Product.findAll(ByList(Product.id, lines.map(_.product.is)))
+  val products = Product.findAll(ByList(Product.id, linesDB.map(_.product.is)))
 
 
   def render = {
     "* *" #> shipments.map {
-      case (shipment, lines) =>
-        ".company *" #> shipment.company.toString & ".lines *" #> lines.map {
-          line => ".product *" #> products(line.product.is.toInt - 1).name & ".price *" #> line.price.toString & ".qty *" #> line.quantity.toString
-        }
+      case (shipment, existingLines) =>
+        ".company *" #> shipment.company.toString & ".when *" #> shipment.when.toString & ".who *" #> shipment.who.toString &
+        ".whom *" #> shipment.whom.toString &
+          (existingLines match {
+            case List() => ".lines_table *" #> ""
+            case lines => ".lines *" #> lines.map {
+              line => ".product *" #> products(line.product.is.toInt - 1).name & ".price *" #> line.price.toString &
+                ".qty *" #> line.quantity.toString & ".value *" #> line.value.toString
+            }
+          })
     }
   }
 }
