@@ -44,6 +44,7 @@ class Boot {
     val entries = List(
       Menu.i("Home") / "index", // the simple way to declare a menu
       Menu.i("Wydania") / "wydania",
+      Menu.i("Wydaj") / "wydaj",
       Menu(Loc("Static", Link(List("static"), true, "/static/index"),
         "Static Content"))):::Product.menus ::: Company.menus
     LiftRules.setSiteMap(SiteMap(entries: _*))
