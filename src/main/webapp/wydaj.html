@@ -10,14 +10,16 @@
 
     <form data-lift="form.ajax">
         <div data-lift="ShipmentCreation">
-
-            <input type="text" name="company" placeholder="Wprowadź nazwę firmy">
-            <input type="text" name="who" placeholder="Kto?">
+            <select id="company"></select>
+            <input type="text" id="who" placeholder="Kto wydaje?"> <span
+                data-lift="msg?id=who_msg;errorClass=msgWho"></span>
+            <br>
             <imput type="submit">
         </div>
     </form>
 
-    <div id="result">Your result</div>
+
+    <div id="result"></div>
 
 </div>
 </body>
