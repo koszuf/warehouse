@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+    <title>Wydania</title>
+</head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+    <h2>Wydania</h2>
+
+    <div data-lift="ShipmentEditForm">
+        <h3>Wydanie dla firmy <span class="company"></span>:</h3>
+
+        <table class="lines_table">
+            <tr>
+                <th>Produkt</th>
+                <th>Cena</th>
+                <th>Ilość</th>
+                <th>Wartość</th>
+            </tr>
+            <tr class="lines">
+                <td class="product"></td>
+                <td class="price"></td>
+                <td class="qty"></td>
+                <td class="value"></td>
+            </tr>
+
+        </table>
+        <h6>Wydał: <span class="who"></span>, dnia <span class="when"></span>. Odebrał <span class="whom"></span> </h6>
+        <form><input type="button" value="Wróć" onClick="history.go(-1);return true;"></form>
+    </div>
+
+
+</div>
+</body>
+</html>

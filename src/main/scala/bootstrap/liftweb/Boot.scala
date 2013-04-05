@@ -14,6 +14,9 @@ import mapper._
 import net.pgc.model._
 import net.liftmodules.JQueryModule
 
+
+case class ShipmentInfo(shipmentId: String)
+
 /**
  * A class that's instantiated early and run.  It allows the application
  * to modify lift's environment
@@ -38,15 +41,15 @@ class Boot {
     }
 
     //Utworzenie struktury bazy
-    Schemifier.schemify(true, Schemifier.infoF _, Product,Shipment, ShipmentLine, Company)
+    Schemifier.schemify(true, Schemifier.infoF _, Product, Shipment, ShipmentLine, Company)
 
     // Build SiteMap
     val entries = List(
       Menu.i("Home") / "index", // the simple way to declare a menu
       Menu.i("Wydania") / "wydania",
       Menu.i("Wydaj") / "wydaj",
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"),
-        "Static Content"))):::Product.menus ::: Company.menus
+      Menu.param[ShipmentInfo]("Edit Shipment", "Edit Shipment", s => Full(ShipmentInfo(s)),
+        dinfo => dinfo.shipmentId) / "edit" / "shipment" >> Hidden) ::: Product.menus ::: Company.menus
     LiftRules.setSiteMap(SiteMap(entries: _*))
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.

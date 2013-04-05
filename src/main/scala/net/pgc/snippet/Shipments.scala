@@ -16,17 +16,21 @@ class Shipments extends Logger {
 
   val shipmentsDB = Shipment.findAll(OrderBy(Shipment.id, Ascending))
   val linesDB = ShipmentLine.findAll(ByList(ShipmentLine.shipment, shipmentsDB.map(_.id.is)))
-  val shipments = for (h <- shipmentsDB) yield (h, ShipmentLine.findAll(By(ShipmentLine.shipment, (h.id.is))))
-  //TODO:Nie szukamy w bazie ale w lines
-  val products = Product.findAll(ByList(Product.id, linesDB.map(_.product.is)))
   val companys = Company.findAll(ByList(Company.id, shipmentsDB.map(_.company.is)))
+  def render = ".shipments *" #> shipmentsDB.map(shipment =>
+    "#company *" #> (companys.find(c=> c.id==shipment.company.is.toInt).getOrElse(new Company())).name &
+      "#when *" #> shipment.when.toString &
+      "#who *" #> shipment.who.toString & "#whom *" #> shipment.whom.toString &
+      "#editlink [href]" #> ("edit/shipment/" + shipment.id.is.toString)
+  )
 
-
+  /*
+  Na kiedyś
   def render = {
     "* *" #> shipments.map {
       case (shipment, existingLines) =>
         ".company *" #> companys(shipment.company.is.toInt -1 ).name & ".when *" #> shipment.when.toString &
-          ".who *" #> shipment.who.toString & ".whom *" #> shipment.whom.toString &
+          ".who *" #> shipment.who.toString & ".whom *" #> shipment.whom.toString &   //dodaj linka
           (existingLines match {
             case List() => ".lines_table *" #> ""
             case lines => ".lines *" #> lines.map {
@@ -35,5 +39,5 @@ class Shipments extends Logger {
             }
           })
     }
-  }
+  }*/
 }
