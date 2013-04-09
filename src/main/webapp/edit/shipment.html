@@ -17,15 +17,28 @@
                 <th>Cena</th>
                 <th>Ilość</th>
                 <th>Wartość</th>
+                <th></th>
             </tr>
-            <tr class="lines">
-                <td class="product"></td>
-                <td class="price"></td>
-                <td class="qty"></td>
-                <td class="value"></td>
+            <tr id="lines">
+                <td id="product"></td>
+                <td id="price"></td>
+                <td id="qty"></td>
+                <td id="value"></td>
+                <td><form data-lift="form.ajax"><input type="submit"></form></td>
             </tr>
 
         </table>
+        <hr>
+        <form data-lift="form.ajax">
+            <div data-lift="ShipmentEditForm.addLine">
+                <select id="product"></select>
+                <input type="text" id="qty" placeholder="Podaj ilość"> <span
+                    data-lift="msg?id=whom_msg;errorClass=msgWhom"></span>
+                 <input type="submit">
+
+            </div>
+        </form>
+
         <h6>Wydał: <span class="who"></span>, dnia <span class="when"></span>. Odebrał <span class="whom"></span> </h6>
         <form><input type="button" value="Wróć" onClick="history.go(-1);return true;"></form>
     </div>

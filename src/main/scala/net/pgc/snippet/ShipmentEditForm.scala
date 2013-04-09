@@ -8,6 +8,11 @@ import js._
 import bootstrap.liftweb.ShipmentInfo
 import net.pgc.model.{Company, Product, ShipmentLine, Shipment}
 import net.liftweb.mapper.{By, ByList}
+import net.liftweb.http.SHtml._
+import net.liftweb.mapper.ByList
+import net.liftweb.common.Full
+import bootstrap.liftweb.ShipmentInfo
+import scala.xml.NodeSeq
 
 
 /**
@@ -18,7 +23,6 @@ import net.liftweb.mapper.{By, ByList}
 class ShipmentEditForm(shipInfo: ShipmentInfo) extends Logger {
 
   def issueError(msg: String) = info(msg + shipInfo.shipmentId)
-
   def render = {
     asInt(shipInfo.shipmentId) match {
       case Full(idAsInt) => {
@@ -32,12 +36,16 @@ class ShipmentEditForm(shipInfo: ShipmentInfo) extends Logger {
                 case List() => ".lines_table" #> "Brak pozycji zlecenia"
                 case _ => {
                   val products = Product.findAll(ByList(Product.id, lines.map(_.product.is)))
-                  ".lines *" #> lines.map {
+                  "#lines *" #> lines.map {
                     line => {
-                      ".product *" #> (products.find(p => p.id == line.product.is.toInt).getOrElse(new Product())).name &
-                        ".price *" #> line.price.toString &
-                        ".qty *" #> line.quantity.toString &
-                        ".value *" #> line.value.toString
+                      "#product *" #> (products.find(p => p.id == line.product.is.toInt).getOrElse(new Product())).name &
+                        "#price *" #> line.price.toString &
+                        "#qty *" #> line.quantity.toString &
+                        "#value *" #> line.value.toString &
+                        "type=submit" #> ajaxSubmit("Usuń linię", () => {
+                          ShipmentLine.findAll(By(ShipmentLine.id, line.id.get)).head.delete_!
+                          S.redirectTo("/edit/shipment/" + asInt(shipInfo.shipmentId).openOr(0))
+                        })
                     }
                   }
                 }
@@ -56,4 +64,38 @@ class ShipmentEditForm(shipInfo: ShipmentInfo) extends Logger {
       }
     }
   }
+
+
+  var qty = ""
+  val products = Product.findAll()
+  var product = products.head.id.get.toString
+
+  def productSelect(in: NodeSeq) = ajaxSelect(products.map(i => (i.id.toString, i.name.toString)),
+  Full("Podaj produkt"), {
+    p => product = p
+  })
+
+  def addLine = {
+
+
+    def processLine(): JsCmd = {
+      val shipmentLine = new ShipmentLine
+      val shipmentId = asInt(shipInfo.shipmentId).openOr(0)
+      val shipment = Shipment.findAll(By(Shipment.id, shipmentId))
+
+      shipmentLine.quantity(asInt(qty).openOr(0)) //TODO: Zamiast defaultowego zera powinna być walidacja
+      shipmentLine.shipment(shipment.head)
+      shipmentLine.product(product.toInt) //TODO: Mała walidacja ;))
+      shipmentLine.save()
+      S.redirectTo("/edit/shipment/" + asInt(shipInfo.shipmentId).openOr(0))
+    }
+
+    "#qty" #> ajaxText(qty, qty = _) &
+      "#product" #> productSelect _ &
+      "type=submit" #> ajaxSubmit("Dodaj linię", processLine)
+
+  }
 }
+
+
+//"#editlink [href]" #> ("edit/shipment/" + shipment.id.is.toString)

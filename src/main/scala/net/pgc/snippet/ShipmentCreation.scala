@@ -23,8 +23,7 @@ import JqJsCmds._
 import JsCmds._
 import SHtml._
 import _root_.scala.xml.{Text, NodeSeq}
-import net.pgc.model.Company
-
+import net.pgc.model._
 //import net.liftmodules.
 
 
@@ -43,22 +42,36 @@ class ShipmentCreation extends StatefulSnippet {
   val companies = Company.findAll()
   var company = companies.head.id.get.toString
   var who = ""
+  var whom = ""
 
   def companySelect(in: NodeSeq) = ajaxSelect(companies.map(i => (i.id.toString, i.name.toString)),
   Full("Nazwa firmy"), {
     c => company = c
   })
 
+
+
   def render = {
 
     def process(): JsCmd = {
-      SetHtml("result", Text("Nr firmy:"+company + ", wydał:" + who))
+      //SetHtml("result", Text("Nr firmy:"+company + ", wydał:" + who))
+      val shipment = new Shipment()
+      shipment.company(company.toInt)
+      shipment.who(who)
+      shipment.when(now)
+      shipment.whom(whom)
+      shipment.save()
+
+      S.redirectTo("/edit/shipment/" + shipment.id.toString)
     }
 
-    "#who" #> (ajaxText(who, who = _) ++ hidden(process)) &
+    "#who" #> ajaxText(who, who = _) &
+      "#whom" #> ajaxText(whom, whom = _) &
       "#company" #> companySelect _ &
       "type=submit" #> ajaxSubmit("Utwórz wydanie", process)
-    //TODO: Walidacja - czy wprowadzony został 'wydający'
+    //TODO: Walidacja - czy wprowadzony został 'wydający' oraz 'odbierający'
   }
+
+
 
 }
