@@ -82,10 +82,13 @@ class ShipmentEditForm(shipInfo: ShipmentInfo) extends Logger {
       val shipmentLine = new ShipmentLine
       val shipmentId = asInt(shipInfo.shipmentId).openOr(0)
       val shipment = Shipment.findAll(By(Shipment.id, shipmentId))
+      val productDB = Product.findAll(By(Product.id,product.toLong)).head
 
       shipmentLine.quantity(asInt(qty).openOr(0)) //TODO: Zamiast defaultowego zera powinna być walidacja
+      shipmentLine.value(productDB.price.get.mc)     //TODO: Trzeba dodać cenę somehow
+      //TODO: po dodaniu ceny trzeba dodać wartość linii
       shipmentLine.shipment(shipment.head)
-      shipmentLine.product(product.toInt) //TODO: Mała walidacja ;))
+      shipmentLine.product(product.toLong) //TODO: Mała walidacja potrzebna ;))
       shipmentLine.save()
       S.redirectTo("/edit/shipment/" + asInt(shipInfo.shipmentId).openOr(0))
     }

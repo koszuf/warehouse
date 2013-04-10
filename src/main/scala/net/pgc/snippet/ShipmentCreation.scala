@@ -56,7 +56,7 @@ class ShipmentCreation extends StatefulSnippet {
     def process(): JsCmd = {
       //SetHtml("result", Text("Nr firmy:"+company + ", wydał:" + who))
       val shipment = new Shipment()
-      shipment.company(company.toInt)
+      shipment.company(company.toLong)
       shipment.who(who)
       shipment.when(now)
       shipment.whom(whom)
