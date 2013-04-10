@@ -72,7 +72,7 @@ class ShipmentEditForm(shipInfo: ShipmentInfo) extends Logger {
 
   def productSelect(in: NodeSeq) = ajaxSelect(products.map(i => (i.id.toString, i.name.toString)),
   Full("Podaj produkt"), {
-    p => product = p
+    product =_
   })
 
   def addLine = {
@@ -83,10 +83,9 @@ class ShipmentEditForm(shipInfo: ShipmentInfo) extends Logger {
       val shipmentId = asInt(shipInfo.shipmentId).openOr(0)
       val shipment = Shipment.findAll(By(Shipment.id, shipmentId))
       val productDB = Product.findAll(By(Product.id,product.toLong)).head
-
+      
       shipmentLine.quantity(asInt(qty).openOr(0)) //TODO: Zamiast defaultowego zera powinna być walidacja
-      shipmentLine.value(productDB.price.get.mc)     //TODO: Trzeba dodać cenę somehow
-      //TODO: po dodaniu ceny trzeba dodać wartość linii
+      shipmentLine.price(productDB.price.get)
       shipmentLine.shipment(shipment.head)
       shipmentLine.product(product.toLong) //TODO: Mała walidacja potrzebna ;))
       shipmentLine.save()
