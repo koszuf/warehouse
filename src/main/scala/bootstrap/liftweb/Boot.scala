@@ -3,17 +3,21 @@ package bootstrap.liftweb
 import net.liftweb._
 import util._
 import Helpers._
-
 import common._
 import http._
 import js.jquery.JQueryArtifacts
 import sitemap._
 import Loc._
 import mapper._
-
 import net.pgc.model._
 import net.liftmodules.JQueryModule
-
+import common._
+import http._
+import sitemap._
+import Loc._
+import net.pgc.model.ShipmentLine
+import code.snippet._
+import code.lib._
 
 case class ShipmentInfo(shipmentId: String)
 
@@ -46,6 +50,9 @@ class Boot {
     // Build SiteMap
     val entries = List(
       Menu.i("Home") / "index", // the simple way to declare a menu
+      SearchPage.menu,
+      AllItemsPage.menu,
+      AnItemPage.menu,
       Menu.i("Wydania") / "wydania",
       Menu.i("Wydaj") / "wydaj",
       Menu.param[ShipmentInfo]("Edit Shipment", "Edit Shipment", s => Full(ShipmentInfo(s)),
@@ -74,6 +81,8 @@ class Boot {
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))
+      
+      LiftRules.dispatch.append(ShareCart)
 
     //Add H2Console
     if (Props.devMode || Props.testMode) {
