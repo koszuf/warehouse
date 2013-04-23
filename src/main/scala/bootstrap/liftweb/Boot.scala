@@ -24,6 +24,8 @@ case class ShipmentInfo(shipmentId: String)
 class Boot {
   def boot {
 
+    val loggedIn = If(() => User.loggedIn_?, () => RedirectResponse("/user_mgt/login"))
+
     // where to search snippet
     LiftRules.addToPackages("net.pgc")
 
@@ -41,16 +43,19 @@ class Boot {
     }
 
     //Utworzenie struktury bazy
-    Schemifier.schemify(true, Schemifier.infoF _, Product, Shipment, ShipmentLine, Company)
+    Schemifier.schemify(true, Schemifier.infoF _, Product, Shipment, ShipmentLine, Company, User)
 
     // Build SiteMap
     val entries = List(
-      Menu.i("Home") / "index", // the simple way to declare a menu
-      Menu.i("Wydania") / "wydania",
-      Menu.i("Wydaj") / "wydaj",
+      Menu.i("Home") / "index" >> User.AddUserMenusAfter >> LocGroup("main"),
+      Menu.i("Wydania") / "wydania" >> LocGroup("work") >> loggedIn,
+      Menu.i("Wydaj") / "wydaj" >> LocGroup("work") >> loggedIn,
       Menu.param[ShipmentInfo]("Edit Shipment", "Edit Shipment", s => Full(ShipmentInfo(s)),
-        dinfo => dinfo.shipmentId) / "edit" / "shipment" >> Hidden) ::: Product.menus ::: Company.menus
-    LiftRules.setSiteMap(SiteMap(entries: _*))
+        dinfo => dinfo.shipmentId) / "edit" / "shipment" >> LocGroup("work") >> loggedIn) :::
+      Product.menus ::: Company.menus //tego się na razie nie da ukryć - trudno, koniec końców i tak wyleci jak zrezygnujemy z CRUDify
+
+    def sitemapMutators = User.sitemapMutator
+    LiftRules.setSiteMap(sitemapMutators(SiteMap(entries: _*)))
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts

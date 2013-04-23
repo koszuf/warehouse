@@ -20,7 +20,8 @@ class Shipments extends Logger {
   def render = ".shipments *" #> shipmentsDB.map(shipment =>
     "#company *" #> (companys.find(c=> c.id==shipment.company.is.toInt).getOrElse(new Company())).name &
       "#when *" #> shipment.when.toString &
-      "#who *" #> shipment.who.toString & "#whom *" #> shipment.whom.toString &
+      "#who *" #> User.find(shipment.who.toString).openOr(new User).firstName &
+      "#whom *" #> shipment.whom.toString &
       "#editlink [href]" #> ("edit/shipment/" + shipment.id.is.toString)
   )
 

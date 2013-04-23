@@ -41,7 +41,7 @@ class ShipmentCreation extends StatefulSnippet {
 
   val companies = Company.findAll()
   var company = companies.head.id.get.toString
-  var who = ""
+  val who = User.currentUser.openOr(new User)
   var whom = ""
 
   def companySelect(in: NodeSeq) = ajaxSelect(companies.map(i => (i.id.toString, i.name.toString)),
@@ -65,11 +65,10 @@ class ShipmentCreation extends StatefulSnippet {
       S.redirectTo("/edit/shipment/" + shipment.id.toString)
     }
 
-    "#who" #> ajaxText(who, who = _) &
-      "#whom" #> ajaxText(whom, whom = _) &
+     "#whom" #> ajaxText(whom, whom = _) &
       "#company" #> companySelect _ &
       "type=submit" #> ajaxSubmit("Utwórz wydanie", process)
-    //TODO: Walidacja - czy wprowadzony został 'wydający' oraz 'odbierający'
+    //TODO: Walidacja - czy wprowadzony został 'odbierający'
   }
 
 

@@ -26,7 +26,7 @@ class Shipment extends LongKeyedMapper[Shipment] with IdPK with Logger {
   object whom extends MappedString(this, 100)
 
   //TODO: Zmienić na foreign relationship to User
-  object who extends MappedString(this, 100)
+  object who extends MappedLongForeignKey(this,User)
 
   //TODO: Zmienić na foreign relationship to deliveryNote
   object deliveryNote extends MappedString(this, 100)
