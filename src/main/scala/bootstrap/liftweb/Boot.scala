@@ -30,6 +30,7 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("net.pgc")
+    LiftRules.addToPackages("code")
 
     //inicjalizacja DB
     if (!DB.jndiJdbcConnAvailable_?) {
@@ -81,8 +82,8 @@ class Boot {
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))
-      
-      LiftRules.dispatch.append(ShareCart)
+
+    LiftRules.dispatch.append(ShareCart)
 
     //Add H2Console
     if (Props.devMode || Props.testMode) {
@@ -90,8 +91,7 @@ class Boot {
         case r if (r.path.partPath match {
           case "console" :: _ => true
           case _ => false
-        }
-          ) => false
+        }) => false
       })
     }
 
