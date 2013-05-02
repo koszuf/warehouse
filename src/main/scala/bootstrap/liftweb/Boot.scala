@@ -16,8 +16,8 @@ import http._
 import sitemap._
 import Loc._
 import net.pgc.model.ShipmentLine
-import code.snippet._
-import code.lib._
+import net.pgc.snippet._
+import net.pgc.lib.ShareCart
 
 case class ShipmentInfo(shipmentId: String)
 
