@@ -83,7 +83,7 @@ class ShipmentEditForm(shipInfo: ShipmentInfo) extends Logger {
       val shipmentId = asInt(shipInfo.shipmentId).openOr(0)
       val shipment = Shipment.findAll(By(Shipment.id, shipmentId))
       val productDB = Product.findAll(By(Product.id,product.toLong)).head
-      
+
       shipmentLine.quantity(asInt(qty).openOr(0)) //TODO: Zamiast defaultowego zera powinna być walidacja
       shipmentLine.price(productDB.price.get)
       shipmentLine.shipment(shipment.head)

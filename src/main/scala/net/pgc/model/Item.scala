@@ -5,18 +5,19 @@ import util._
 import Helpers._
 import common._
 import json._
-import scala.xml.Node
+import scala.xml.NodeSeq
 import net.pgc.model._
+import scala.xml.Node
 
 /**
  * An item in inventory
  */
-case class Item(id: String, 
-				name: String, 
+case class Item(id: String,
+				name: String,
 				//description: String,
-                price: BigDecimal, 
+                price: BigDecimal,
                 //taxable: Boolean,
-                barcode: String, 
+                barcode: String,
                 category: String)
 
 /**
@@ -50,14 +51,14 @@ object Item {
    * We needed to replicate it here because we
    * have overloaded unapply methods
    */
-  def unapply(in: Any): Option[(String, String, 
+  def unapply(in: Any): Option[(String, String,
                                 BigDecimal, String,
                                 String)] = {
     in match {
-      case i: Item => Some((i.id, 
-    		  				i.name, 
+      case i: Item => Some((i.id,
+    		  				i.name,
                             i.price,
-                            i.barcode, 
+                            i.barcode,
                             i.category))
       case _ => None
     }
@@ -66,7 +67,7 @@ object Item {
   /**
    * Convert an item to XML
    */
-  implicit def toXml(item: Item): Node = 
+  implicit def toXml(item: Item): Node =
     <item>{Xml.toXml(item)}</item>
 
 
@@ -75,7 +76,7 @@ object Item {
    * implicit and in the companion object, so
    * an Item can be returned easily from a JSON call
    */
-  implicit def toJson(item: Item): JValue = 
+  implicit def toJson(item: Item): JValue =
     Extraction.decompose(item)
 
   /**
@@ -83,7 +84,7 @@ object Item {
    * implicit and in the companion object, so
    * an Item can be returned easily from a JSON call
    */
-  implicit def toJson(items: Seq[Item]): JValue = 
+  implicit def toJson(items: Seq[Item]): JValue =
     Extraction.decompose(items)
 
   /**
@@ -91,7 +92,7 @@ object Item {
    * implicit and in the companion object, so
    * an Item can be returned easily from an XML REST call
    */
-  implicit def toXml(items: Seq[Item]): Node = 
+  implicit def toXml(items: Seq[Item]): Node =
     <items>{
       items.map(toXml)
     }</items>
@@ -102,35 +103,27 @@ object Item {
   def inventoryItems: Seq[Item] = items
 
   // The raw data
- def data = 
+ def data =
 """[
   {"id": "1234", "name": "Cat Food",
-  "description": "Yummy, tasty cat food",
   "price": 4.25,
-  "taxable": true,
-  "weightInGrams": 1000,
-  "qnty": 4
+  "barcode": "1000",
+  "category": "4"
   },
   {"id": "1235", "name": "Dog Food",
-  "description": "Yummy, tasty dog food",
   "price": 7.25,
-  "taxable": true,
-  "weightInGrams": 5000,
-  "qnty": 72
+  "barcode": "5000,"
+  "category": "72"
   },
   {"id": "1236", "name": "Fish Food",
-  "description": "Yummy, tasty fish food",
   "price": 2,
-  "taxable": false,
-  "weightInGrams": 200,
-  "qnty": 45
+  "barcode": "200",
+  "category": "45"
   },
   {"id": "1237", "name": "Sloth Food",
-  "description": "Slow, slow sloth food",
   "price": 18.33,
-  "taxable": true,
-  "weightInGrams": 750,
-  "qnty": 62
+  "barcode": "750",
+  "category": "62"
   },
 ]
 """
@@ -181,7 +174,7 @@ object Item {
     val Id = id // an upper case stable ID for pattern matching
 
     items = items.filter {
-      case i@Item(Id, _, _, _, _) => 
+      case i@Item(Id, _, _, _, _) =>
         ret = Full(i) // side effect
         false
       case _ => true
@@ -195,7 +188,7 @@ object Item {
    */
   private def updateListeners(item: Item): Item = {
     synchronized {
-      listeners.foreach(f => 
+      listeners.foreach(f =>
         Schedule.schedule(() => f(item), 0 seconds))
 
       listeners = Nil
@@ -212,7 +205,7 @@ object Item {
       listeners ::= f
     }
   }
-    
+
 }
 
 /**

@@ -17,14 +17,14 @@ class Cart {
   /**
    * The subtotal
    */
-  val subtotal = contents.lift(_.foldLeft(zero)(_ + 
+  val subtotal = contents.lift(_.foldLeft(zero)(_ +
                                                 _.qMult(_.price)))
 
   /**
    * The taxable subtotal
    */
   val taxableSubtotal = contents.lift(_.
-                                      foldLeft(zero)(_ + 
+                                      foldLeft(zero)(_ +
                                                      _.qMult(_.price)))
 
   /**
@@ -61,7 +61,7 @@ class Cart {
    */
   def addItem(item: Item) {
     contents.atomicUpdate(v => v.find(_.item == item) match {
-      case Some(ci) => v.map(ci => ci.copy(qnty = ci.qnty + 
+      case Some(ci) => v.map(ci => ci.copy(qnty = ci.qnty +
                                            (if (ci.item == item) 1 else 0)))
       case _ => v :+ CartItem(item, 1)
     })
@@ -74,7 +74,7 @@ class Cart {
     if (qnty <= 0) removeItem(item)
     else contents.atomicUpdate(v => v.find(_.item == item) match {
       case Some(ci) => v.map(ci => ci.copy(qnty =
-                                           (if (ci.item == item) qnty 
+                                           (if (ci.item == item) qnty
                                             else ci.qnty)))
       case _ => v :+ CartItem(item, qnty)
     })
@@ -92,7 +92,7 @@ class Cart {
 /**
  * An item in the cart
  */
-case class CartItem(item: Item, qnty: Int, 
+case class CartItem(item: Item, qnty: Int,
                     id: String = Helpers.nextFuncName) {
 
   /**

@@ -29,31 +29,31 @@ class CometCart extends CometActor {
    */
   def render = {
     "#contents" #> (
-      "tbody" #> 
+      "tbody" #>
       Helpers.findOrCreateId(id =>  // make sure tbody has an id
         // when the cart contents updates
         WiringUI.history(cart.contents) {
           (old, nw, ns) => {
             // capture the tr part of the template
             val theTR = ("tr ^^" #> "**").apply(ns)
-            
+
             def ciToId(ci: CartItem): String = ci.id + "_" + ci.qnty
 
             // build a row out of a cart item
             def html(ci: CartItem): NodeSeq = {
-              ("tr [id]" #> ciToId(ci) & 
+              ("tr [id]" #> ciToId(ci) &
                "@name *" #> ci.name &
                "@qnty *" #> SHtml.
                ajaxText(ci.qnty.toString,
                         s => {
                           TheCart.
-                          setItemCnt(ci, 
+                          setItemCnt(ci,
                                      Helpers.toInt(s))
                         }, "style" -> "width: 20px;") &
                "@del [onclick]" #> SHtml.
              ajaxInvoke(() => TheCart.removeItem(ci)))(theTR)
             }
-            
+
             // calculate the delta between the lists and
             // based on the deltas, emit the current jQuery
             // stuff to update the display
@@ -64,7 +64,7 @@ class CometCart extends CometActor {
     "#tax" #> WiringUI.asText(cart.tax) & // display the tax
     "#total" #> WiringUI.asText(cart.total) // display the total
   }
-   
+
   /**
    * Process messages from external sources
    */

@@ -13,7 +13,7 @@ object AllItemsPage {
   // will display all items
   lazy val menu = Menu.i("Items") / "item" >>
   Loc.Snippet("Items", render)
-  
+
   // display the items
   def render =
     "tbody *" #> renderItems(Item.inventoryItems)

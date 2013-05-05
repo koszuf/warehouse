@@ -46,7 +46,7 @@ object ShareCart extends RestHelper {
     }
     Schedule.schedule(() => cleanup(), 5 seconds)
   }
-  
+
   // clean up every 5 seconds
   cleanup()
 
@@ -56,7 +56,7 @@ object ShareCart extends RestHelper {
     case "co_shop" :: ShareCart(cart) :: Nil Get _ => {
       // set the cart
       TheCart.set(cart)
-      
+
       // send the SetNewCart message to the CometCart
       S.session.foreach(
         _.sendCometActorMessage("CometCart", Empty,

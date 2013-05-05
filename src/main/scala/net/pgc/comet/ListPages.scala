@@ -30,7 +30,7 @@ class ListPages extends CometActor {
     // by default, the dependency info will be removed
     // on a reRender
     SessionPresenceInfo.pages.addDependent(this)
-  }    
+  }
 
   /**
    * By default, Lift deals with managing wiring dependencies.

@@ -18,11 +18,11 @@ import scala.language.postfixOps
 class WhatPage extends CometActor {
   private var thePath: Box[String] = Empty
   private var lastToken = Helpers.nextFuncName
-  
+
   override def lifespan = Full(3 seconds)
 
   def render = NodeSeq.Empty
-  
+
   /**
    * Is this CometActor going to capture the initial Req
    * object?  If yes, override this method and return true
@@ -56,7 +56,7 @@ class WhatPage extends CometActor {
     // by this session
     thePath.foreach(p => SessionPresenceInfo.pages.
                     atomicUpdate(_ + (uniqueId -> p)))
-    
+
   }
 
   private def removePresence() {
@@ -103,7 +103,7 @@ class WhatPage extends CometActor {
     case HeartBeat() => {
       // a Noop JavaScript function
       partialUpdate(JsRaw(uniqueId+" = 1;"))
-      heartBeat() 
+      heartBeat()
     }
 
     case CheckToken(token) => {
