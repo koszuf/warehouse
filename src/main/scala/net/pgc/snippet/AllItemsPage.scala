@@ -1,6 +1,6 @@
 package net.pgc.snippet
 
-import net.pgc.model.Item
+import net.pgc.model.{Product, Item}
 import net.pgc.comet._
 import net.liftweb._
 import http._
@@ -19,7 +19,7 @@ object AllItemsPage {
     "tbody *" #> renderItems(Item.inventoryItems)
 
   // for a list of items, display those items
-  def renderItems(in: Seq[Item]) =
+  def renderItems(in: Seq[Product]) =
     "tr" #> in.map(item => {
       "a *" #> item.name &
       "a [href]" #> AnItemPage.menu.calcHref(item) &

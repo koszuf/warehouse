@@ -1,6 +1,6 @@
 package net.pgc.snippet
 
-import net.pgc.model.Item
+import net.pgc.model._
 import net.liftweb._
 import http._
 import util._

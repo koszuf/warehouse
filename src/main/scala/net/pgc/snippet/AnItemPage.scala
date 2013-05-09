@@ -1,6 +1,6 @@
 package net.pgc.snippet
 
-import net.pgc.model.Item
+import net.pgc.model._
 import net.pgc.comet._
 import net.liftweb._
 import util._
@@ -11,11 +11,11 @@ import scala.xml.Text
 
 object AnItemPage {
   // create a parameterized page
-  def menu = Menu.param[Item]("Item", Loc.LinkText(i => Text(i.name)),
-                              Item.find _, _.id) / "item" / *
+  def menu = Menu.param[Product]("Item", Loc.LinkText(i => Text(i.name)),
+                              Item.find _, _.id.toString) / "item" / *
 }
 
-class AnItemPage(item: Item) {
+class AnItemPage(item: Product) {
   def render = "@name *" #> item.name &
  // "@description *" #> item.description &
   "@price *" #> item.price.toString &

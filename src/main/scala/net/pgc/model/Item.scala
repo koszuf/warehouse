@@ -12,13 +12,7 @@ import scala.xml.Node
 /**
  * An item in inventory
  */
-case class Item(id: String,
-				name: String,
-				//description: String,
-                price: BigDecimal,
-                //taxable: Boolean,
-                barcode: String,
-                category: String)
+class Item extends Product
 
 /**
  * The Item companion object
@@ -27,24 +21,27 @@ object Item {
   private implicit val formats =
     net.liftweb.json.DefaultFormats + BigDecimalSerializer
 
-  private var items: List[Item] = parse(data).extract[List[Item]]
+  val getProducts = Product.findAll()
+  //val productsls: Item  = getProducts.map{identity}(collection.breakOut)
 
-  private var listeners: List[Item => Unit] = Nil
+  private var items: List[Product] = getProducts//parse(data).extract[List[Item]]
+
+  private var listeners: List[Product => Unit] = Nil
 
   /**
    * Convert a JValue to an Item if possible
    */
-  def apply(in: JValue): Box[Item] = Helpers.tryo{in.extract[Item]}
+  def apply(in: JValue): Box[Product] = Helpers.tryo{in.extract[Item]}
 
   /**
    * Extract a String (id) to an Item
    */
-  def unapply(id: String): Option[Item] = Item.find(id)
+  def unapply(id: String): Option[Product] = Product.find(id)
 
   /**
    * Extract a JValue to an Item
    */
-  def unapply(in: JValue): Option[Item] = apply(in)
+  def unapply(in: JValue): Option[Product] = apply(in)
 
   /**
    * The default unapply method for the case class.
@@ -55,7 +52,7 @@ object Item {
                                 BigDecimal, String,
                                 String)] = {
     in match {
-      case i: Item => Some((i.id,
+      case i: Item => Some((i.id.toString,
     		  				i.name,
                             i.price,
                             i.barcode,
@@ -67,7 +64,7 @@ object Item {
   /**
    * Convert an item to XML
    */
-  implicit def toXml(item: Item): Node =
+  implicit def toXml(item: Product): Node =
     <item>{Xml.toXml(item)}</item>
 
 
@@ -76,7 +73,7 @@ object Item {
    * implicit and in the companion object, so
    * an Item can be returned easily from a JSON call
    */
-  implicit def toJson(item: Item): JValue =
+  implicit def toJson(item: Product): JValue =
     Extraction.decompose(item)
 
   /**
@@ -84,7 +81,7 @@ object Item {
    * implicit and in the companion object, so
    * an Item can be returned easily from a JSON call
    */
-  implicit def toJson(items: Seq[Item]): JValue =
+  implicit def toJson(items: Seq[Product]): JValue =
     Extraction.decompose(items)
 
   /**
@@ -92,7 +89,7 @@ object Item {
    * implicit and in the companion object, so
    * an Item can be returned easily from an XML REST call
    */
-  implicit def toXml(items: Seq[Item]): Node =
+  implicit def toXml(items: Seq[Product]): Node =
     <items>{
       items.map(toXml)
     }</items>
@@ -100,7 +97,7 @@ object Item {
   /**
    * Get all the items in inventory
    */
-  def inventoryItems: Seq[Item] = items
+  def inventoryItems: Seq[Product] = items
 
   // The raw data
  def data =
@@ -131,21 +128,21 @@ object Item {
   /**
    * Select a random Item
    */
-  def randomItem: Item = synchronized {
+  def randomItem: Product = synchronized {
     items(Helpers.randomInt(items.length))
   }
 
   /**
    * Find an item by id
    */
-  def find(id: String): Box[Item] = synchronized {
+  def find(id: String): Box[Product] = synchronized {
     items.find(_.id == id)
   }
 
   /**
    * Add an item to inventory
    */
-  def add(item: Item): Item = {
+  def add(item: Product): Product = {
     synchronized {
       items = item :: items.filterNot(_.id == item.id)
       updateListeners(item)
@@ -156,7 +153,7 @@ object Item {
    * Find all the items with the string in their name or
    * description
    */
-  def search(str: String): List[Item] = {
+  def search(str: String): List[Product] = {
     val strLC = str.toLowerCase()
 
     items.filter(i =>
@@ -168,8 +165,8 @@ object Item {
    * Deletes the item with id and returns the
    * deleted item or Empty if there's no match
    */
-  def delete(id: String): Box[Item] = synchronized {
-    var ret: Box[Item] = Empty
+  def delete(id: String): Box[Product] = synchronized {
+    var ret: Box[Product] = Empty
 
     val Id = id // an upper case stable ID for pattern matching
 
@@ -186,7 +183,7 @@ object Item {
   /**
    * Update listeners when the data changes
    */
-  private def updateListeners(item: Item): Item = {
+  private def updateListeners(item: Product): Product = {
     synchronized {
       listeners.foreach(f =>
         Schedule.schedule(() => f(item), 0 seconds))
@@ -199,7 +196,7 @@ object Item {
   /**
    * Add an onChange listener
    */
-  def onChange(f: Item => Unit) {
+  def onChange(f: Product => Unit) {
     synchronized {
       // prepend the function to the list of listeners
       listeners ::= f

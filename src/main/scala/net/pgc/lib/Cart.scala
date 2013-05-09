@@ -1,6 +1,6 @@
 package net.pgc.lib
 
-import net.pgc.model.Item
+import net.pgc.model.{Product, Item}
 
 import net.liftweb._
 import util._
@@ -59,7 +59,7 @@ class Cart {
    * Add an item to the cart.  If it's already in the cart,
    * then increment the quantity
    */
-  def addItem(item: Item) {
+  def addItem(item: Product) {
     contents.atomicUpdate(v => v.find(_.item == item) match {
       case Some(ci) => v.map(ci => ci.copy(qnty = ci.qnty +
                                            (if (ci.item == item) 1 else 0)))
@@ -70,7 +70,7 @@ class Cart {
   /**
    * Set the item quantity.  If zero or negative, remove
    */
-  def setItemCnt(item: Item, qnty: Int) {
+  def setItemCnt(item: Product, qnty: Int) {
     if (qnty <= 0) removeItem(item)
     else contents.atomicUpdate(v => v.find(_.item == item) match {
       case Some(ci) => v.map(ci => ci.copy(qnty =
@@ -84,7 +84,7 @@ class Cart {
   /**
    * Removes an item from the cart
    */
-  def removeItem(item: Item) {
+  def removeItem(item: Product) {
     contents.atomicUpdate(_.filterNot(_.item == item))
   }
 }
@@ -92,19 +92,19 @@ class Cart {
 /**
  * An item in the cart
  */
-case class CartItem(item: Item, qnty: Int,
+case class CartItem(item: Product, qnty: Int,
                     id: String = Helpers.nextFuncName) {
 
   /**
    * Multiply the quantity times some calculation on the
    * contained Item (e.g., getting its weight)
    */
-  def qMult(f: Item => BigDecimal): BigDecimal = f(item) * qnty
+  def qMult(f: Product => BigDecimal): BigDecimal = f(item) * qnty
 }
 
 /**
  * The CartItem companion object
  */
 object CartItem {
-  implicit def cartItemToItem(in: CartItem): Item = in.item
+  implicit def cartItemToItem(in: CartItem): Product = in.item
 }

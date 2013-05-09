@@ -12,7 +12,7 @@ import JsCmds._
 object AddRandom {
   def render = "* *+" #> SHtml.ajaxButton("Add Random", () => {
     TheCart.get.contents.set(TheCart.get.contents.get :+
-                             CartItem(Item.randomItem, 1))
+                             CartItem(Item.randomItem.asInstanceOf[Item], 1))
     Noop
   })
 }
